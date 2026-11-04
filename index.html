@@ -161,6 +161,7 @@
       display: flex;
       gap: 0.5rem;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .badge {
@@ -341,6 +342,17 @@
       color: #0f172a;
     }
 
+    .action-btn.shuffle-btn {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .action-btn.shuffle-btn:hover {
+      background: var(--accent);
+      color: #0f172a;
+    }
+
     /* Slide Navigator Grid */
     .grid-panel {
       background: var(--card);
@@ -354,13 +366,19 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.75rem;
       margin-bottom: 0.85rem;
     }
 
     .grid-header h2 {
       font-size: 0.95rem;
       color: var(--muted);
+    }
+
+    .grid-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     .question-grid {
@@ -460,38 +478,41 @@
 
     <section class="grid-panel">
       <div class="grid-header">
-        <h2>Slide Navigator (Click any number to jump)</h2>
-        <button class="action-btn" id="reset-all-btn">Reset All Scores</button>
+        <h2>Slide Navigator (Grouped by Reportable Subject)</h2>
+        <div class="grid-actions">
+          <button class="action-btn shuffle-btn" id="shuffle-deck-btn">🔀 Shuffle Deck & Options</button>
+          <button class="action-btn" id="reset-all-btn">Reset All Scores</button>
+        </div>
       </div>
       <div class="question-grid" id="question-grid"></div>
     </section>
   </div>
 
   <script>
-    const QUESTIONS = [
+    const MASTER_QUESTIONS = [
       // ================= UNIT U5700.0 (Questions 1 - 20) =================
       {
         id: 1, unit: "U5700.0", skill: "Skill 5700.01 — Perform Housekeeping",
         q: "When staging lumber and stripping form materials during active housekeeping on a job site, what is the immediate mandatory action regarding protruding nails?",
         options: [
           "Leave them in the lumber until the end of the week for bulk removal",
-          "Stack the boards with the nail points facing upward so workers can see them",
           "Bend them over flush or pull them out immediately before stacking the material",
-          "Paint the protruding nails with high-visibility orange spray paint"
+          "Paint the protruding nails with high-visibility orange spray paint",
+          "Stack the boards with the nail points facing upward so workers can see them"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Under Skill 5700.01 and O. Reg. 213/91, protruding nails in scrap or stripped lumber must be removed or bent flush immediately before stacking or disposal to prevent puncture injuries."
       },
       {
         id: 2, unit: "U5700.0", skill: "Skill 5700.01 — Perform Housekeeping",
         q: "How must materials and debris be managed around stairwells, gangways, and emergency egress routes?",
         options: [
-          "Kept completely clear and unobstructed at all times, with adequate lighting maintained",
           "Stored neatly on one side of the stairwell as long as 450 mm of width remains",
+          "Kept completely clear and unobstructed at all times, with adequate lighting maintained",
           "Stacked on stair landings during active shifts and removed before nightfall",
           "Covered with tarps to prevent tripping hazards while remaining in the walkway"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Access and egress routes, stairways, and gangways must be kept completely free of tools, materials, debris, and obstructions at all times to ensure safe movement and emergency evacuation."
       },
       {
@@ -499,11 +520,11 @@
         q: "Repeatedly operating a high-vibration pneumatic rock drill without rotation or anti-vibration controls exposes a Construction Craft Worker primarily to which category of workplace hazard?",
         options: [
           "Biological hazard",
+          "Musculoskeletal / ergonomic physical hazard (Hand-Arm Vibration Syndrome)",
           "Chemical sensitizer hazard",
-          "Confined space atmospheric hazard",
-          "Musculoskeletal / ergonomic physical hazard (Hand-Arm Vibration Syndrome)"
+          "Confined space atmospheric hazard"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Skill 5700.02 requires identifying physical and musculoskeletal hazards. Prolonged exposure to tool vibration damages blood vessels, nerves, and joints in the hands and arms (HAVS)."
       },
       {
@@ -515,19 +536,19 @@
           "Hydrogen sulfide gas",
           "Methane pockets"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Concrete and masonry contain crystalline silica. Dry cutting without water suppression or vacuum dust collection releases respirable silica dust, which causes irreversible silicosis and lung disease."
       },
       {
         id: 5, unit: "U5700.0", skill: "Skill 5700.03 — Wear, Adjust and Maintain PPE",
         q: "When inspecting a CSA Type 2 hard hat prior to starting a shift, which condition requires removing the hard hat from service immediately?",
         options: [
-          "Chalking, crazing, cracks in the shell, or a torn suspension strap",
           "Minor surface dust from concrete form stripping",
+          "Chalking, crazing, cracks in the shell, or a torn suspension strap",
           "A company safety orientation sticker applied away from the edge",
           "Being 14 months old from the manufacture date stamped on the brim"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Under Skill 5700.03, UV degradation (chalking/fading), cracks, dents, or damaged suspension components compromise the impact energy absorption of the hard hat, requiring immediate replacement."
       },
       {
@@ -535,11 +556,11 @@
         q: "What must a worker verify every time they put on a tight-fitting elastomeric half-mask respirator before entering a dusty work zone?",
         options: [
           "That the cartridges have been washed with soap and water",
+          "Positive-pressure and negative-pressure user seal checks on a clean-shaven face",
           "That a surgical mask is worn underneath the facepiece seal",
-          "That the straps are loose enough to slide two fingers under the chin seal",
-          "Positive-pressure and negative-pressure user seal checks on a clean-shaven face"
+          "That the straps are loose enough to slide two fingers under the chin seal"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Tight-fitting respirators require a clean-shaven facial seal and both positive- and negative-pressure user seal checks every time the respirator is donned."
       },
       {
@@ -547,11 +568,11 @@
         q: "During a pre-use inspection of an electric angle grinder, you discover the outer insulation jacket on the power cord is sliced, exposing the inner insulated conductors, and the wheel guard has been removed. What is the correct action?",
         options: [
           "Wrap the cord with black electrical tape and operate the grinder carefully with two hands",
-          "Plug it into a non-GFCI receptacle so it does not trip the breaker during use",
           "Tag the grinder 'Out of Service / Defective,' disconnect it from power, and report it to the supervisor",
+          "Plug it into a non-GFCI receptacle so it does not trip the breaker during use",
           "Reinstall the guard and continue using the grinder until the inner wire copper shows"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Under Skill 5700.04, any tool with a damaged cord or missing safety guard must be immediately removed from service, tagged out to prevent others from using it, and reported for repair."
       },
       {
@@ -563,7 +584,7 @@
           "Give the worker cold water to drink to replace lost fluids",
           "Wash the wound thoroughly with solvent before wrapping it"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Controlling life-threatening hemorrhage through immediate, firm direct pressure with a clean/sterile pad and activating emergency medical services/site first aid is the critical priority under Skill 5700.05."
       },
       {
@@ -571,23 +592,23 @@
         q: "When setting up a portable non-self-supporting extension ladder to access an upper floor landing, what are the required setup ratio and top extension height?",
         options: [
           "1:2 slope ratio and extending at least 0.3 m (1 ft) above the landing",
-          "1:6 slope ratio and flush with the top edge of the landing",
           "1:4 horizontal-to-vertical ratio (1:3 to 1:4) and extending at least 0.9 m (3 ft) above the landing",
+          "1:6 slope ratio and flush with the top edge of the landing",
           "45-degree angle with no tie-off required at the top"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Portable ladders must be set at a 1:4 base-to-height ratio (between 1:3 and 1:4 under O. Reg. 213/91), placed on a firm footing, secured at the top, and extend at least 0.9 m (3 ft) above the upper landing for safe handhold during step-off."
       },
       {
         id: 10, unit: "U5700.0", skill: "Skill 5700.06 — Check Ladders, Scaffolding and Related Equipment",
         q: "Under Ontario Regulation 213/91, a rolling scaffold tower may remain freestanding without outriggers or tie-backs only when its platform height does not exceed how many times its smallest base dimension?",
         options: [
-          "3 times the minimum base dimension",
           "2 times the minimum base dimension",
+          "3 times the minimum base dimension",
           "5 times the minimum base dimension",
           "6 times the minimum base dimension"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "The height of a freestanding or rolling scaffold must not exceed 3 times its smallest base dimension unless outriggers or stabilizers are installed to widen the effective base."
       },
       {
@@ -595,11 +616,11 @@
         q: "During heavy equipment movement or noisy concrete placement, a worker sees an immediate danger to a co-worker. Which hand signal universally instructs the operator to perform an Emergency Stop?",
         options: [
           "One arm raised vertically with the index finger spinning in a circle",
+          "Both arms extended horizontally to the sides and waved rapidly back and forth",
           "Both hands clasped together in front of the waist",
-          "One thumb pointed downward while tapping the hard hat",
-          "Both arms extended horizontally to the sides and waved rapidly back and forth"
+          "One thumb pointed downward while tapping the hard hat"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Extending both arms horizontally and waving them back and forth is the standard universal signal for an Emergency Stop."
       },
       {
@@ -611,19 +632,19 @@
           "Installed starting at the work area outward; removed starting from the furthest sign inward",
           "Installed randomly as long as the taper is completed last"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Under Skill 5700.08 and OTM Book 7, traffic control signs and tapers are installed in the direction of approaching traffic so workers are protected by upstream advance warnings, and removed in reverse order."
       },
       {
         id: 13, unit: "U5700.0", skill: "Skill 5700.09 — Perform Traffic Controls",
         q: "Where must a Traffic Control Person (TCP) stand when directing vehicles with a STOP/SLOW sign?",
         options: [
-          "Outside the travelled lane on the shoulder or curb, in full view of approaching traffic, with an unobstructed escape route and never turning their back on traffic",
           "In the centre of the active travel lane directly in front of approaching vehicles",
+          "Outside the travelled lane on the shoulder or curb, in full view of approaching traffic, with an unobstructed escape route and never turning their back on traffic",
           "Inside the excavated trench behind the excavator bucket",
           "Directly between two pieces of backing construction equipment"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Under Skill 5700.09, a TCP must stand outside the active path of travel, remain highly visible to oncoming drivers, maintain a clear escape route, and never turn their back on live traffic."
       },
       {
@@ -635,7 +656,7 @@
           "A top rail between 0.9 m and 1.1 m high, a mid-rail, and a toeboard (minimum 89 mm / 100 mm high), capable of withstanding required statutory point loads",
           "A top rail at 0.6 m height with no mid-rail required if workers wear hard hats"
         ],
-        answer: 2, // C
+        answer: 2,
         rationale: "Under Skill 5700.10 and O. Reg. 213/91, a compliant guardrail system requires a top rail (0.9 m to 1.1 m high), an intermediate mid-rail, and a toeboard at the base to prevent tools or materials from kicking off the edge."
       },
       {
@@ -643,11 +664,11 @@
         q: "When adjusting a full-body fall arrest harness, where must the primary fall arrest D-ring and chest strap be positioned?",
         options: [
           "D-ring at the lower lumbar spine; chest strap loose across the stomach",
+          "Dorsal D-ring centred squarely between the shoulder blades; chest strap positioned mid-chest; leg straps snug (flat hand fits between strap and thigh)",
           "D-ring on the left hip; leg straps unbuckled for comfort when climbing",
-          "Dorsal D-ring at the base of the neck; chest strap across the throat",
-          "Dorsal D-ring centred squarely between the shoulder blades; chest strap positioned mid-chest; leg straps snug (flat hand fits between strap and thigh)"
+          "Dorsal D-ring at the base of the neck; chest strap across the throat"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Proper harness adjustment places the dorsal D-ring between the shoulder blades to keep the worker upright during fall arrest, with the chest strap at mid-chest and snug leg straps to prevent sliding out of the harness."
       },
       {
@@ -659,7 +680,7 @@
           "To allow the lanyard to be tied in a knot if clearance is below 3 metres",
           "To avoid having to inspect the anchor point"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "A shock absorber can deploy up to 1.2 m (or more depending on CSA class) in addition to the lanyard length and worker height. Without adequate fall clearance, the worker will hit the ground or structure below before arrest completes."
       },
       {
@@ -671,19 +692,19 @@
           "Type 3 or Type 4 soil; sloped from the very bottom of the trench at a minimum of 1 horizontal to 1 vertical (Type 3) or 3 horizontal to 1 vertical (Type 4)",
           "Bedrock; no inspection or sloping required"
         ],
-        answer: 2, // C
+        answer: 2,
         rationale: "Previously excavated or loose sandy fill is Type 3 (or Type 4 if wet/muddy/flowing). Type 3 soil requires a minimum 1:1 slope from the bottom of the trench, and Type 4 requires a minimum 3:1 slope from the bottom."
       },
       {
         id: 18, unit: "U5700.0", skill: "Skill 5700.13 — Maintain Site Clear of Snow and Icy Conditions",
         q: "Before workers begin using exterior scaffold access stairs and site walkways after a freezing rain event, what must be done?",
         options: [
-          "Physically scrape/remove snow and ice buildup and apply sand, salt, or de-icing grit to restore traction",
           "Post a warning sign and leave the ice in place until afternoon sun melts it",
+          "Physically scrape/remove snow and ice buildup and apply sand, salt, or de-icing grit to restore traction",
           "Spray cold water over the walkways to wash away the frost",
           "Lay loose polyethylene vapour barrier sheets over the icy steps"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Under Skill 5700.13, snow and ice must be promptly cleared from walkways, ramps, and scaffolds, and abrasive traction material (sand/grit) or de-icer must be applied to prevent slip-and-fall injuries."
       },
       {
@@ -691,11 +712,11 @@
         q: "A fire breaks out involving an energized electrical distribution panel and a gasoline container nearby. Which fire extinguisher rating and operating technique are required?",
         options: [
           "Class A water extinguisher sprayed directly at the top of the flames",
+          "Multi-purpose ABC dry chemical (or BC) extinguisher applied using the PASS method (Pull, Aim at the base of the fire, Squeeze, Sweep)",
           "Class K wet chemical extinguisher applied from 15 metres away",
-          "Class D metal fire powder scooped onto the electrical panel by hand",
-          "Multi-purpose ABC dry chemical (or BC) extinguisher applied using the PASS method (Pull, Aim at the base of the fire, Squeeze, Sweep)"
+          "Class D metal fire powder scooped onto the electrical panel by hand"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Flammable liquids are Class B fires and energized electrical equipment is Class C. A multi-purpose ABC extinguisher handles both safely using the PASS technique aimed at the base of the fire."
       },
       {
@@ -703,11 +724,11 @@
         q: "Before entering a deep concrete vault classified as a confined space, atmospheric testing is conducted in top-to-bottom strata. In what strict order must atmospheric hazards be tested?",
         options: [
           "Toxic gases first, flammable gases second, oxygen level last",
-          "Only at the top manhole cover opening without lowering a sampling probe",
           "Oxygen content first (19.5%–23.0%), flammable/combustible gases second (LEL), and toxic gases/vapours third (e.g., CO, H2S)",
+          "Only at the top manhole cover opening without lowering a sampling probe",
           "After the worker climbs to the bottom of the vault with a portable meter"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Under Skill 5700.16, remote pre-entry atmospheric testing must be performed from outside the space at multiple depths in the exact order: (1) Oxygen level (because catalytic LEL sensors require normal oxygen to read accurately), (2) Flammable gases/vapours, and (3) Toxic contaminants."
       },
 
@@ -716,12 +737,12 @@
         id: 21, unit: "U5703.0", skill: "Skill 5703.01 — Erect and Position Stationary Equipment",
         q: "Why must portable diesel air compressors and gas generators be positioned on firm, level ground before starting?",
         options: [
-          "To prevent the equipment from rolling or tipping and to ensure proper internal engine oil lubrication and accurate fluid level readings",
           "So the fuel tank holds 20% more fuel than rated",
+          "To prevent the equipment from rolling or tipping and to ensure proper internal engine oil lubrication and accurate fluid level readings",
           "So exhaust fumes settle directly into the nearest excavation",
           "Because engine alternators only produce electricity on a 15-degree incline"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Under Skill 5703.01, stationary equipment must be levelled and chocked/barricaded on stable ground so splash/pressure lubrication systems work properly without oil starvation and the unit cannot shift during operation."
       },
       {
@@ -729,11 +750,11 @@
         q: "When positioning a gasoline-powered generator or trash pump near a trench or building hoarding, how must the engine exhaust be directed?",
         options: [
           "Directed into the hoarding to help heat the concrete curing area",
+          "Positioned downwind and away from trenches, air intakes, and enclosed work areas so carbon monoxide (CO) cannot accumulate",
           "Directed downward into the bottom of the trench since CO rises rapidly",
-          "Covered with a canvas tarp to muffle the exhaust noise",
-          "Positioned downwind and away from trenches, air intakes, and enclosed work areas so carbon monoxide (CO) cannot accumulate"
+          "Covered with a canvas tarp to muffle the exhaust noise"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Internal combustion engines emit colourless, odourless, lethal carbon monoxide (CO). Stationary equipment must be placed outdoors in well-ventilated areas downwind and away from excavations, hoardings, and air intakes."
       },
       {
@@ -745,7 +766,7 @@
           "Park directly underneath overhead high-voltage distribution lines for better light reflection",
           "Leave the outriggers retracted so the unit can sway freely in high winds"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Raising a light tower mast without deploying and levelling all outriggers creates an extreme tip-over hazard, and verifying minimum safe clearance from overhead power lines prevents electrocution."
       },
       {
@@ -753,11 +774,11 @@
         q: "How close to the top edge of an unsupported excavation may a heavy trailer-mounted compressor be parked?",
         options: [
           "Right on the edge of the trench lip so shorter air hoses can be used",
-          "Straddling the trench on two 38 mm x 89 mm spruce planks",
           "Outside the zone of influence (and never within at least 1.0 m of the excavation edge, or further back as required by soil type and trench depth) and properly barricaded",
+          "Straddling the trench on two 38 mm x 89 mm spruce planks",
           "Within 15 cm of the trench wall if the parking brake is set"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Surcharge loads and vibration from stationary equipment near a trench edge can trigger a cave-in. Equipment must be kept well back from the excavation lip, chocked, and barricaded."
       },
       {
@@ -765,11 +786,11 @@
         q: "When setting up a portable generator to supply power to corded construction tools in damp site conditions, what electrical safety protection is required on 15 A and 20 A, 125 V receptacles?",
         options: [
           "Removing the ground pin from all extension cords",
+          "Class A Ground Fault Circuit Interrupter (GFCI) protection",
           "Wrapping receptacle plugs in plastic grocery bags",
-          "Increasing the circuit breaker rating from 15 A to 40 A",
-          "Class A Ground Fault Circuit Interrupter (GFCI) protection"
+          "Increasing the circuit breaker rating from 15 A to 40 A"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Under Ontario Regulation 213/91, 15 A and 20 A receptacles at 125 V used for portable tools outdoors or in damp locations must be protected by a Class A GFCI."
       },
       {
@@ -781,19 +802,19 @@
           "A plastic bucket with no holes",
           "An open-ended steel pipe driven 1 metre into the clay"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "A suction strainer basket blocks oversized rocks and debris that exceed the pump's solids-handling rating, preventing impeller jamming or casing damage."
       },
       {
         id: 27, unit: "U5703.0", skill: "Skill 5703.02 — Perform Daily Equipment Inspections",
         q: "When performing a daily pre-start inspection on a stationary diesel compressor or generator (Skill 5703.02), under what condition should the engine oil and coolant levels be checked?",
         options: [
-          "With the equipment shut off, cooled down, and resting on level ground before startup",
           "While the engine is running at full operating RPM and removing the hot radiator cap immediately",
+          "With the equipment shut off, cooled down, and resting on level ground before startup",
           "Only once a month when the low-oil shutdown switch activates",
           "By tilting the machine to a 30-degree angle with a forklift"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Checking oil on level ground with the engine off ensures an accurate dipstick reading, and checking coolant only when cold prevents severe scalding from pressurized radiator steam."
       },
       {
@@ -801,23 +822,23 @@
         q: "During a daily walk-around inspection of a high-pressure air compressor and its airlines, what safety devices must be verified at every Chicago-style (claw) hose coupling?",
         options: [
           "Duct tape wrapped around the outside of the claws",
-          "Baling wire twisted loosely around one side of the hose",
           "Locking pins installed through the coupling lugs AND safety whip checks (restraint cables) secured across every connection",
+          "Baling wire twisted loosely around one side of the hose",
           "Grease applied inside the air line to lubricate the coupling"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Pressurized air hoses can violently whip if a coupling disconnects. Both locking pins in the claw couplings and properly installed whip-check cables are mandatory across every joint and at the compressor manifold."
       },
       {
         id: 29, unit: "U5703.0", skill: "Skill 5703.02 — Perform Daily Equipment Inspections",
         q: "While inspecting a centrifugal dewatering pump's suction hose vs. discharge hose, how do you verify the hoses have not been swapped?",
         options: [
-          "The suction hose is rigid/wire-helix reinforced so it will not collapse under vacuum, whereas standard lay-flat hose is only for pressurized discharge",
           "Suction hose and discharge hose are identical and interchangeable",
+          "The suction hose is rigid/wire-helix reinforced so it will not collapse under vacuum, whereas standard lay-flat hose is only for pressurized discharge",
           "The lay-flat collapsible hose goes on the suction intake side",
           "The smaller diameter hose always goes on the suction side"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "The intake (suction) side operates under negative pressure (vacuum) and requires a reinforced, non-collapsible suction hose with airtight gaskets; a lay-flat hose on the intake side will instantly suck flat and block flow."
       },
       {
@@ -825,11 +846,11 @@
         q: "During a pre-use inspection of an electric submersible dewatering pump, which defect requires immediate lock-out and removal from service?",
         options: [
           "Mud dried on the exterior aluminum pump base",
+          "A damaged power cable jacket or a missing/frayed lifting rope, forcing someone to lift the pump by its electrical power cord",
           "Water dripping from the discharge hose after shutdown",
-          "A discharge hose longer than 15 metres",
-          "A damaged power cable jacket or a missing/frayed lifting rope, forcing someone to lift the pump by its electrical power cord"
+          "A discharge hose longer than 15 metres"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Submersible pumps sit in water; any cut in the power cable insulation creates a lethal electrocution hazard, and lifting a submersible pump by its electrical cord damages the watertight cable gland."
       },
       {
@@ -841,7 +862,7 @@
           "That motor oil is poured onto the V-belts to stop squeaking",
           "That the emergency stop button has been taped down"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Under Skill 5703.02, daily inspections include checking belt condition/tension and confirming all mechanical guards covering rotating pulleys and pinch points are intact and secure."
       },
       {
@@ -849,11 +870,11 @@
         q: "If a fuel leak or hydraulic fluid leak is discovered under a stationary generator during the morning inspection, what are the required steps?",
         options: [
           "Start the generator to warm up the seals and see if the leak stops",
-          "Wash the leaked fuel into the nearest storm sewer with a water hose",
           "Do not start the unit; tag it out of service, contain/clean up the spill using absorbent pads, and report the defect to the supervisor/mechanic",
+          "Wash the leaked fuel into the nearest storm sewer with a water hose",
           "Cover the puddle with dry sawdust and leave the generator running"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Fuel and hydraulic leaks create fire, slip, and environmental hazards. Defective equipment must be tagged out, spills contained with proper spill-kit absorbents, and repairs completed before operation."
       },
       {
@@ -865,7 +886,7 @@
           "Close the discharge valve completely and remove the suction strainer",
           "Pour diesel fuel into the pump casing"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Self-priming centrifugal pumps require water inside the pump casing (volute) to create the vacuum needed to draw water up the suction hose and to cool/lubricate the mechanical shaft seal."
       },
       {
@@ -873,23 +894,23 @@
         q: "Why does a centrifugal trash pump fail to prime and lift water if the rubber gasket is missing from the female camlock coupling on the suction hose?",
         options: [
           "Because water will spray outward under high pressure at the intake",
+          "Because air leaks into the suction line, breaking the vacuum required to draw water up into the pump",
           "Because the discharge hose is too short",
-          "Because the engine RPM is too high",
-          "Because air leaks into the suction line, breaking the vacuum required to draw water up into the pump"
+          "Because the engine RPM is too high"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Even a tiny air leak at the suction coupling prevents the pump from developing the negative pressure (vacuum) needed to lift water from the sump hole."
       },
       {
         id: 35, unit: "U5703.0", skill: "Skill 5703.03 — Operate Stationary Equipment",
         q: "When moving a portable dewatering pump from hole to hole across a job site (Skill 5703.03), what is the safe procedure?",
         options: [
-          "Shut off the pump, drain heavy water from hoses/casing to reduce weight, disconnect or coil hoses safely, and use proper two-person lifting or mechanical handling with PPE",
           "Drag the running pump across the ground by pulling on the suction hose",
+          "Shut off the pump, drain heavy water from hoses/casing to reduce weight, disconnect or coil hoses safely, and use proper two-person lifting or mechanical handling with PPE",
           "Carry the pump solo while the engine is at full throttle so it stays primed",
           "Lift the gasoline pump by its hot exhaust muffler"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Shutting down the unit, draining water weight, avoiding hot engine/exhaust surfaces, and using proper manual handling/team lifting prevents burns, musculoskeletal back injuries, and equipment damage."
       },
       {
@@ -897,11 +918,11 @@
         q: "What is the proper shutdown procedure when disconnecting a pneumatic air tool (such as a chipping hammer or paving breaker) from a stationary compressor's air hose?",
         options: [
           "Uncouple the claw fitting while the line is under full pressure and hold the hose end tightly",
-          "Fold/kink the rubber hose in half and pull the coupling apart",
           "Shut off the air supply valve at the compressor/manifold, bleed off trapped residual air pressure by operating the tool trigger, and only then disconnect the coupling",
+          "Fold/kink the rubber hose in half and pull the coupling apart",
           "Turn off the compressor engine without bleeding the air receiver tank or hose"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Disconnecting a pressurized air line causes explosive hose whip. The supply valve must be closed and all residual downstream pressure bled to zero before uncoupling."
       },
       {
@@ -913,19 +934,19 @@
           "Leave the engine idling unattended overnight inside a closed tarp tent",
           "Pour salt rocks into the suction hose"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Water expands by approximately 9% when freezing, which will crack cast-iron or aluminum pump casings and destroy impellers unless the casing and hoses are completely drained at shutdown."
       },
       {
         id: 38, unit: "U5703.0", skill: "Skill 5703.03 — Operate Stationary Equipment",
         q: "What is the safe procedure for refuelling a portable gasoline generator or pump on site?",
         options: [
-          "Shut off the engine, allow it to cool down, use an approved safety fuel container, maintain nozzle-to-tank contact to prevent static sparks, and keep a fire extinguisher nearby",
           "Refuel while the engine is running so site lighting does not flicker",
+          "Shut off the engine, allow it to cool down, use an approved safety fuel container, maintain nozzle-to-tank contact to prevent static sparks, and keep a fire extinguisher nearby",
           "Pour fuel through a plastic funnel while smoking at least 2 metres away",
           "Overfill the tank right to the top lip of the filler neck so fewer stops are needed"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Gasoline vapours ignite easily on hot mufflers or from static electricity. Equipment must be shut off and cooled before refuelling with an approved container, leaving expansion space at the top of the tank."
       },
       {
@@ -933,11 +954,11 @@
         q: "Before shutting down a heavy diesel generator at the end of a shift, what step should be taken regarding connected electrical loads?",
         options: [
           "Pull the main fuel line off while all heaters and saws are running under full load",
+          "Turn off/disconnect electrical loads and switch off the main breaker, then allow the engine to idle briefly to cool down before turning the key off",
           "Short-circuit the output receptacle to trip the breaker",
-          "Leave all tools switched 'ON' so they start automatically the next morning",
-          "Turn off/disconnect electrical loads and switch off the main breaker, then allow the engine to idle briefly to cool down before turning the key off"
+          "Leave all tools switched 'ON' so they start automatically the next morning"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Disconnecting loads and opening the main breaker before engine shutdown prevents voltage/frequency drops from damaging connected equipment and allows turbochargers/engines to cool safely."
       },
       {
@@ -945,11 +966,11 @@
         q: "Which type of pump is specifically designed with a flexible reciprocating membrane to handle slow seepage, heavy mud, and slurry without being damaged when sucking air ('snoring')?",
         options: [
           "High-pressure multi-stage booster pump",
-          "Deep-well jet pump",
           "Diaphragm pump (mud/sludge pump)",
+          "Deep-well jet pump",
           "Clear-water swimming pool pump"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Positive-displacement diaphragm pumps use a flexing diaphragm and check valves, making them ideal for thick mud, slurry, and intermittent seepage where air enters the intake line."
       },
 
@@ -959,11 +980,11 @@
         q: "If a synthetic nylon web sling has a missing or completely illegible manufacturer's Working Load Limit (WLL) identification tag, what must the rigger do?",
         options: [
           "Estimate its capacity based on the width and colour of the webbing",
+          "Immediately remove the sling from service",
           "Use the sling at 50% of the capacity of a similar-looking sling",
-          "Write the capacity on the webbing with a permanent marker",
-          "Immediately remove the sling from service"
+          "Write the capacity on the webbing with a permanent marker"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Under Skill 5706.01 and O. Reg. 213/91, every sling and rigging hardware component must have its permanently affixed, legible Working Load Limit marking/tag; if missing or unreadable, it must be removed from service."
       },
       {
@@ -975,19 +996,19 @@
           "Slight creasing where the sling passed through a shackle eye",
           "The sling being stored inside a dry gangbox"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Synthetic web slings contain internal red warning yarns; if cuts, snags, or abrasion expose those red core yarns—or if heat damage, chemical burns, or broken load stitching are present—the sling must be immediately removed from service."
       },
       {
         id: 43, unit: "U5706.0", skill: "Skill 5706.01 — Select and Use Rigging Equipment",
         q: "During a pre-use inspection of a wire rope sling, what is 'birdcaging' and what does it require?",
         options: [
-          "A permanent deformation where outer wire strands untwist and flare outward from the core (often caused by shock loading), requiring immediate removal from service",
           "A special braided eye termination that increases sling capacity by 25%",
+          "A permanent deformation where outer wire strands untwist and flare outward from the core (often caused by shock loading), requiring immediate removal from service",
           "A protective wire mesh sleeve placed over sharp concrete edges",
           "Surface rust that can be wiped off with a rag"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "Birdcaging occurs when wire rope strands permanently unlay and open up like a cage due to shock loading or twisting. It compromises core support and strength, requiring immediate removal from service."
       },
       {
@@ -995,11 +1016,11 @@
         q: "Which grade of alloy steel chain is mandatory as the minimum standard for overhead hoisting and rigging on construction sites?",
         options: [
           "Grade 30 proof coil hardware store chain",
-          "Grade 43 high-test transport tie-down chain",
           "Grade 80 or Grade 100 alloy steel chain stamped with proper identification marks",
+          "Grade 43 high-test transport tie-down chain",
           "Galvanized dog-run link chain"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Only heat-treated alloy steel chain (Grade 80 or Grade 100) specifically rated and stamped for overhead lifting may be used in hoisting slings; transport chains do not have the ductility required for overhead lifting."
       },
       {
@@ -1007,23 +1028,23 @@
         q: "When connecting two sling eyes to a single crane hook using a bow (anchor) shackle, where must the two sling eyes be placed vs. the crane hook?",
         options: [
           "Both sling eyes on the threaded shackle pin, and the crane hook in the bow",
+          "Both sling eyes in the rounded bow (body) of the shackle, and the shackle pin resting on the crane hook (never exceeding a 120-degree included angle between legs)",
           "One sling eye on the pin and one in the bow, loading the shackle sideways",
-          "Forced over the hook point without using a shackle",
-          "Both sling eyes in the rounded bow (body) of the shackle, and the shackle pin resting on the crane hook (never exceeding a 120-degree included angle between legs)"
+          "Forced over the hook point without using a shackle"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Multiple sling legs must gather in the rounded bow of the shackle while the pin rests in the hook; placing moving sling legs on a screw pin can unscrew the pin under load."
       },
       {
         id: 46, unit: "U5706.0", skill: "Skill 5706.01 — Select and Use Rigging Equipment",
         q: "When installing wire rope clips (Crosby clips / U-bolt clips) to form a thimble eye termination, how must the U-bolt and saddle be oriented?",
         options: [
-          "Place all U-bolts over the dead (short) end of the wire rope and all forged saddles on the live (load-bearing) end ('Never saddle a dead horse')",
           "Alternate the U-bolts back and forth between the live end and dead end",
+          "Place all U-bolts over the dead (short) end of the wire rope and all forged saddles on the live (load-bearing) end ('Never saddle a dead horse')",
           "Place all U-bolts on the live load-bearing end so they bite deeper into the cable",
           "Use a single clip with the saddle on the dead end"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "The U-bolt crushes wire strands, so it must always go on the dead (short) tail end, while the smooth forged saddle supports the live (load-bearing) rope ('Never saddle a dead horse')."
       },
       {
@@ -1035,7 +1056,7 @@
           "The crane hook will automatically move sideways to match the load",
           "The sling tension will drop to zero on the shorter leg"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Under Skill 5706.02, an unbalanced load will always shift and swing until its Centre of Gravity aligns vertically under the crane hook, which can overload one sling leg and strike nearby workers."
       },
       {
@@ -1043,11 +1064,11 @@
         q: "Compared to a single vertical hitch (100% of vertical WLL), how do a standard Choker hitch and a true vertical Basket hitch affect a sling's rated capacity?",
         options: [
           "Choker increases capacity to 150%; Basket reduces capacity to 50%",
-          "Both hitches have the exact same 100% capacity as a single vertical leg",
           "A standard Choker hitch reduces capacity to approximately 75%–80% of vertical WLL, while a vertical Basket hitch doubles capacity (200% of single vertical WLL)",
+          "Both hitches have the exact same 100% capacity as a single vertical leg",
           "A Choker hitch doubles capacity to 200%"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Choking bends the sling tightly around the choking eye, reducing rated capacity to ~75%–80% of vertical WLL, whereas cradling a load in a true vertical 90° basket hitch distributes the weight across two vertical legs (200% of single vertical WLL)."
       },
       {
@@ -1055,23 +1076,23 @@
         q: "As the horizontal sling angle (measured between the sling leg and the horizontal plane of the load) decreases from 60 degrees down to 30 degrees on a two-leg bridle hitch, what happens to the tension in each sling leg?",
         options: [
           "Tension in each leg decreases by half",
+          "Tension in each sling leg increases dramatically—at a 30-degree horizontal angle, each sling leg experiences tension equal to 100% of the total load weight",
           "Tension stays constant regardless of sling angle",
-          "Only the crane boom feels the difference; sling tension is unaffected",
-          "Tension in each sling leg increases dramatically—at a 30-degree horizontal angle, each sling leg experiences tension equal to 100% of the total load weight"
+          "Only the crane boom feels the difference; sling tension is unaffected"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "At a 30° horizontal sling angle (sin 30° = 0.5), the load angle factor is 2.0, meaning each leg of a two-leg bridle carries the entire weight of the load. Sling angles below 30° from horizontal must be avoided."
       },
       {
         id: 50, unit: "U5706.0", skill: "Skill 5706.02 — Perform Rigging Techniques",
         q: "Why must a standard single-wrap choker hitch NEVER be used by itself to hoist a loose bundle of smooth steel rebar or conduit over a construction site?",
         options: [
-          "Because a single-wrap choker does not provide 360-degree contact around the bundle, allowing individual smooth rods from the middle or top to slip out and fall",
           "Because steel rebar is lighter than wood",
+          "Because a single-wrap choker does not provide 360-degree contact around the bundle, allowing individual smooth rods from the middle or top to slip out and fall",
           "Because wire rope cannot touch steel rebar",
           "Because choker hitches only work underwater"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "For bundles of loose rods, pipes, or lumber, a double-wrap choker hitch (wrapped 360° around the bundle before passing through the eye) used in pairs is required so interior pieces are compressed and cannot slide out."
       },
       {
@@ -1079,11 +1100,11 @@
         q: "What must a rigger install wherever a wire rope or synthetic sling passes around the sharp corners of a structural steel H-beam or precast concrete panel?",
         options: [
           "Grease or soap on the sharp corner",
-          "Duct tape wrapped once around the sling",
           "Softeners, corner protectors, wear pads, or timber blocking to prevent the sharp edge from cutting or kinking the sling",
+          "Duct tape wrapped once around the sling",
           "Nothing, because wire rope cannot be damaged by structural steel edges"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Sharp edges sever synthetic slings under tension and permanently kink wire rope strands. Padding/softeners or engineered corner protectors are mandatory at all sharp load corners."
       },
       {
@@ -1095,7 +1116,7 @@
           "Only the project owner standing inside the site trailer",
           "The truck driver who delivered the load"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Under Skill 5706.03 and O. Reg. 213/91, a crane operator must take routine signals from only one designated signaller at a time to prevent conflicting instructions, while always obeying an Emergency Stop signal from anyone."
       },
       {
@@ -1103,11 +1124,11 @@
         q: "When directing a 'blind lift' where the crane operator cannot see the load or the landing zone, what communication protocol is required using two-way radios?",
         options: [
           "Use a shared public radio channel and only speak when the load touches down",
+          "Use a dedicated, tested radio channel with continuous voice communication (or repetitive command words); if radio contact is lost at any moment, the operator must stop all crane movement immediately",
           "Have workers shout loudly from the bottom of the shaft",
-          "Use text messages to direct the crane boom",
-          "Use a dedicated, tested radio channel with continuous voice communication (or repetitive command words); if radio contact is lost at any moment, the operator must stop all crane movement immediately"
+          "Use text messages to direct the crane boom"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Radio-controlled blind lifts require a dedicated frequency checked before the lift and continuous voice commands; any interruption or loss of transmission requires an immediate stop of all hoisting operations."
       },
       {
@@ -1119,7 +1140,7 @@
           "Lower the Boom and Raise the Load",
           "Dog Everything"
         ],
-        answer: 0, // A
+        answer: 0,
         rationale: "Raising the forearm vertically with the index finger pointing up and turning in small horizontal circles is the universal crane hand signal for 'Hoist (Raise the Load).'"
       },
       {
@@ -1127,11 +1148,11 @@
         q: "How should a rigger control the swing and rotation of a suspended load while guiding it into position, and what rule applies to tag lines?",
         options: [
           "Walk directly underneath the suspended load pushing it with both hands",
-          "Wrap the tag line twice around your waist for better braking leverage",
           "Use non-conductive fibre tag lines while standing clear of the load path and fall zone, and never wrap a tag line around your hand, wrist, or body",
+          "Wrap the tag line twice around your waist for better braking leverage",
           "Use a steel chain dragged across energized power cords as a tag line"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Tag lines keep workers outside the crush/fall zone while controlling load rotation. Wrapping a tag line around a hand, wrist, or waist can pull a worker off a slab or under the load if the load shifts suddenly."
       },
       {
@@ -1143,7 +1164,7 @@
           "That workers stand on top of the pipe bundle to hold it down with body weight",
           "That the slings are pulled out from underneath the load at high speed with the crane hook"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "Under Skill 5706.04, a load must never be released from the rigging until it rests on a firm, solid location and is positively blocked, wedged, or chained against rolling or tipping."
       },
       {
@@ -1151,23 +1172,23 @@
         q: "When using a hydraulic or ratchet jack to lift heavy machinery or structural formwork (Skill 5706.05), what is the critical safety rule regarding timber cribbing/blocking?",
         options: [
           "Raise the jack to its maximum stroke first and only place blocking at the very end of the day",
+          "Set the jack on a solid, level timber base at a designated jack point, and progressively build/follow the load closely with hardwood cribbing and wedges as it rises—never rely on an unblocked jack to support a load",
           "Stack narrow concrete masonry blocks vertically on end under the jack",
-          "Place your hands underneath the raised load to adjust the bottom shim",
-          "Set the jack on a solid, level timber base at a designated jack point, and progressively build/follow the load closely with hardwood cribbing and wedges as it rises—never rely on an unblocked jack to support a load"
+          "Place your hands underneath the raised load to adjust the bottom shim"
         ],
-        answer: 3, // D
+        answer: 1,
         rationale: "Hydraulic seals or mechanical pawls can fail without warning. Jacks must rest on solid level cribbing at approved jack points, and progressive timber cribbing must closely follow the load during lifting so the load is always supported by blocking."
       },
       {
         id: 58, unit: "U5706.0", skill: "Skill 5706.06 — Select and Use Chain Falls, Ratchet Hoist and Tirfors",
         q: "Before attaching a manual chain fall or ratchet lever hoist (come-along) to an overhead beam or formwork structure (Skill 5706.06), what must be verified first?",
         options: [
-          "That the overhead suspension point, beam clamp/choker, and supporting structure have sufficient verified bearing capacity to support the total weight of the load and rigging",
           "That the chain fall is rated for at least half the weight of the load",
+          "That the overhead suspension point, beam clamp/choker, and supporting structure have sufficient verified bearing capacity to support the total weight of the load and rigging",
           "That the hook safety latch has been removed for faster hooking",
           "That the load chain has a 360-degree twist in it"
         ],
-        answer: 0, // A
+        answer: 1,
         rationale: "A chain fall is only as strong as its overhead anchor. Under Skill 5706.06, you must verify the bearing capacity of the suspension point and attachment hardware before applying load."
       },
       {
@@ -1175,11 +1196,11 @@
         q: "If a ratchet lever hoist (come-along) or Tirfor (grip hoist) handle becomes very hard to pull while aligning heavy concrete formwork, what must a worker NEVER do?",
         options: [
           "Inspect the load path for an obstruction or bind",
-          "Check the rated capacity of the hoist against the load weight",
           "Place a 'cheater bar' (pipe extension) over the lever handle or have multiple workers pull on the handle to force it",
+          "Check the rated capacity of the hoist against the load weight",
           "Use a higher-capacity hoist or add a second rigging line"
         ],
-        answer: 2, // C
+        answer: 1,
         rationale: "Lever handles on come-alongs and Tirfors are engineered so a single worker's hand force corresponds to the safe Working Load Limit. Using a pipe extension ('cheater bar') dangerously overloads the hoist and can snap the cable, chain, or anchor instantly."
       },
       {
@@ -1191,17 +1212,82 @@
           "A Tirfor can only lower loads and cannot lift or pull horizontally",
           "A Tirfor operates without any safety shear pin"
         ],
-        answer: 1, // B
+        answer: 1,
         rationale: "A Tirfor (grip hoist) uses dual alternating self-energizing jaws to grip and draw a matched wire rope straight through the housing, providing precise, long-distance pulling, lifting, and formwork alignment at constant mechanical advantage."
       }
     ];
 
-    const STORAGE_KEY = "ccw_450a_u5700_u5703_u5706_responses_v2";
-    let userResponses = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const STORAGE_KEY = "ccw_450a_u5700_u5703_u5706_state_v3";
+    const UNIT_ORDER = ["U5700.0", "U5703.0", "U5706.0"];
+    const LETTERS = ["A", "B", "C", "D"];
+
+    let QUESTIONS = [];
+    let userResponses = {};
     let activeFilter = "ALL";
     let currentSlideIndex = 0;
 
-    const LETTERS = ["A", "B", "C", "D"];
+    // Fisher-Yates Array Shuffler
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // Shuffles questions WITHIN each reportable subject group (U5700.0, U5703.0, U5706.0)
+    // and shuffles each question's 4 options while updating the answer index
+    function buildShuffledDeck() {
+      let combinedDeck = [];
+
+      UNIT_ORDER.forEach(unitCode => {
+        const unitQuestions = MASTER_QUESTIONS
+          .filter(q => q.unit === unitCode)
+          .map(q => {
+            const correctOptionText = q.options[q.answer];
+            const shuffledOptions = shuffleArray(q.options);
+            const newAnswerIndex = shuffledOptions.indexOf(correctOptionText);
+            return {
+              ...q,
+              options: shuffledOptions,
+              answer: newAnswerIndex
+            };
+          });
+
+        const shuffledUnitQuestions = shuffleArray(unitQuestions);
+        combinedDeck = combinedDeck.concat(shuffledUnitQuestions);
+      });
+
+      return combinedDeck;
+    }
+
+    function loadOrInitializeState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.deck) && parsed.deck.length === MASTER_QUESTIONS.length) {
+            QUESTIONS = parsed.deck;
+            userResponses = parsed.responses || {};
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Could not parse saved state, initializing fresh shuffled deck.");
+      }
+
+      QUESTIONS = buildShuffledDeck();
+      userResponses = {};
+      saveState();
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        deck: QUESTIONS,
+        responses: userResponses
+      }));
+    }
 
     function getFilteredQuestions() {
       if (activeFilter === "ALL") return QUESTIONS;
@@ -1209,10 +1295,6 @@
         return QUESTIONS.filter(q => userResponses[q.id] !== undefined && userResponses[q.id] !== q.answer);
       }
       return QUESTIONS.filter(q => q.unit === activeFilter);
-    }
-
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(userResponses));
     }
 
     function updateScoreboard() {
@@ -1265,7 +1347,7 @@
 
       document.getElementById("unit-badge").textContent = currentQ.unit;
       document.getElementById("skill-badge").textContent = currentQ.skill;
-      document.getElementById("slide-counter").textContent = `Slide ${currentSlideIndex + 1} of ${filtered.length} (Q#${currentQ.id})`;
+      document.getElementById("slide-counter").textContent = `Slide ${currentSlideIndex + 1} of ${filtered.length} (Bank Ref #${currentQ.id})`;
       document.getElementById("question-text").textContent = currentQ.q;
 
       const optionsList = document.getElementById("options-list");
@@ -1315,7 +1397,8 @@
       filtered.forEach((q, idx) => {
         const btn = document.createElement("button");
         btn.className = "grid-dot";
-        btn.textContent = q.id;
+        btn.textContent = idx + 1;
+        btn.title = `${q.unit} — Bank Ref #${q.id}`;
         if (idx === currentSlideIndex) btn.classList.add("current");
         if (userResponses[q.id] !== undefined) {
           if (userResponses[q.id] === q.answer) btn.classList.add("answered-correct");
@@ -1359,6 +1442,25 @@
       renderSlide();
     });
 
+    document.getElementById("shuffle-deck-btn").addEventListener("click", () => {
+      const hasAnswers = Object.keys(userResponses).length > 0;
+      if (hasAnswers && !confirm("Shuffling the deck and answer options will reset your current scores. Continue?")) {
+        return;
+      }
+      QUESTIONS = buildShuffledDeck();
+      userResponses = {};
+      currentSlideIndex = 0;
+      saveState();
+      renderSlide();
+
+      const shuffleBtn = document.getElementById("shuffle-deck-btn");
+      const originalText = shuffleBtn.textContent;
+      shuffleBtn.textContent = "✓ Shuffled Within Units!";
+      setTimeout(() => {
+        shuffleBtn.textContent = originalText;
+      }, 1400);
+    });
+
     document.getElementById("reset-all-btn").addEventListener("click", () => {
       if (confirm("Reset all saved scores and answers across all 60 questions?")) {
         userResponses = {};
@@ -1384,6 +1486,7 @@
     });
 
     // Initialize
+    loadOrInitializeState();
     renderSlide();
   </script>
 </body>
